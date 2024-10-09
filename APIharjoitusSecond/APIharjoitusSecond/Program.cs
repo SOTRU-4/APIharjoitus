@@ -1,13 +1,12 @@
-using APIharjoitus;
+using APIharjoitusSecond;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+var app = builder.Build();
 
 
 builder.Services.AddDbContext<QuestDB>(opt => opt.UseInMemoryDatabase("QuestList"));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-
-var app = builder.Build();
 
 app.MapPost("/quest", async (Quest quest, QuestDB db) =>
 {
@@ -16,7 +15,12 @@ app.MapPost("/quest", async (Quest quest, QuestDB db) =>
 
     return Results.Created($"/quest/{quest.Id}", quest);
 });
+app.MapGet("/quest", () => "Hello quest!");
 
-app.MapGet("/", () => "Hello World!");
+app.MapGet("/todoitems/{id}", async (int id, QuestDB db) =>
+    await db.Quests.FindAsync(id)
+        is Quest quest
+            ? Results.Ok(quest)
+            : Results.NotFound());
 
 app.Run();

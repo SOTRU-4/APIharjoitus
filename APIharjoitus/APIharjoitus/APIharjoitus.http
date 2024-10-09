@@ -1,0 +1,5 @@
+﻿@APIharjoitus_HostAddress = https://localhost:7249
+
+POST {{APIharjoitus_HostAddress}}/quest
+
+###
